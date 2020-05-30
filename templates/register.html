@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="content-section">
+  <!-- Might need to read up on this
+       Due to the action being empty,
+       it goes back to the form page.
+  -->
+  <form method="POST" action="">
+    <!-- To ensure secure login -->
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Join today</legend>
+
+      <!-- It is possible to use label tags and customize using
+      bootstrap, however since we're using the members defined
+      in RegistrationForm, we'll use Flask Methods for setting
+      the form up. -->
+      <div class="form-group">
+        {{form.username.label(class="form-control-label")}}
+        {% if form.username.errors %}
+          {{form.username(class="form-control form-control-sm is-invalid")}}
+          {% for error in form.username.errors %}
+            <div class="invalid-feedback">
+                <span> {{error}} </span>
+            </div>
+          {% endfor %}
+        {% else %}
+          {{form.username(class="form-control form-control-sm")}}
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{form.email.label(class="form-control-label")}}
+        <span aria-describedby="emailhelp">
+            {% if form.email.errors %}
+              {{form.email(class="form-control form-control-sm is-invalid")}}
+            {% for error in form.email.errors %}
+              <div class="invalid-feedback">
+                  <span> {{error}} </span>
+              </div>
+            {% endfor %}
+            {% else %}
+              {{form.email(class="form-control form-control-sm")}}
+            {% endif %}
+        </span>
+        <small id="emailhelp" class="form-text text-muted">
+          We'll never share your email with anyone else.
+        </small>
+      </div>
+
+      <div class="form-group">
+        {{form.password.label(class="form-control-label")}}
+        {% if form.password.errors %}
+        {{form.password(class="form-control form-control-sm is-invalid")}}
+        {% for error in form.password.errors %}
+          <div class="invalid-feedback">
+            <span> {{error}} </span>
+          </div>
+        {% endfor %}
+        {% else %}
+          {{form.password(class="form-control form-control-sm")}}
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{form.confirm_password.label(class="form-control-label")}}
+        {% if form.confirm_password.errors %}
+         {{form.confirm_password(class="form-control form-control-sm is-invalid")}}
+        {% for error in form.confirm_password.errors %}
+          <div class="invalid-feedback">
+              <span> {{error}} </span>
+          </div>
+        {% endfor %}
+        {% else %}
+          {{form.confirm_password(class="form-control form-control-sm")}}
+        {% endif %}
+      </div>
+    </fieldset>
+
+    <div class="form-group">
+      {{form.submit(class="btn btn-outline-info")}}
+    </div>
+  </form>
+</div>
+
+<div class="border-top">
+  <small>
+    Already have an account? <a href="{{url_for('login')}}"> Sign In </a>
+  </small>
+</div>
+{% endblock content %}
