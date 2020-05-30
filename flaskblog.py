@@ -20,12 +20,12 @@ app = Flask(__name__)
 
 @app.route('/')  # / is the root page
 @app.route('/home')  # it's easy to stack up routes similar to switch cases
-def hello_world():
+def home():
     return render_template('home.html', posts=posts)
 
 
 @app.route('/about')
-def about_me():
+def about():
     return render_template('about.html', title = "About Page")
 
 # the methods argument, specifies the requests
