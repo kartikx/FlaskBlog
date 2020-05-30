@@ -18,6 +18,8 @@ posts = [
 
 app = Flask(__name__)
 
+# A secret key protects your website from attacks. Read more in future.
+app.config['SECRET_KEY'] = 'b4fc4568f2af568f30f20d92385ced86'
 
 @app.route('/')  # / is the root page
 @app.route('/home')  # it's easy to stack up routes similar to switch cases
