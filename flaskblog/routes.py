@@ -57,6 +57,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        # Read up on Flashing, and how to link-ize this.
         if not user :
           flash("That username does not exist, create an account?", "info")
 

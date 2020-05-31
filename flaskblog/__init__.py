@@ -8,17 +8,23 @@ from flask_login import LoginManager
 app = Flask(__name__)
 
 # A secret key protects your website from attacks. Read more in future.
-app.config['SECRET_KEY'] = 'b4fc4568f2af568f30f20d92385ced86'
+app.config['SECRET_KEY']              = 'b4fc4568f2af568f30f20d92385ced86'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+
+db            = SQLAlchemy(app)
+bcrypt        = Bcrypt(app)
 login_manager = LoginManager(app)
 
 # this is going to be the same as the function name,
 # i.e. the thing you'd pass in to url_for,
 # DOUBT confused regarding this, does the route name and function name
 # always have to match? read more on this
+
+# You need to specify this, so that login restricted sites
+# know what page to show.
 login_manager.login_view = 'login'
+
+# Specifying this enables a bootstrap-style message.
 login_manager.login_message_category = 'info'
 
 # At the end to prevent Circular Imports

@@ -9,11 +9,13 @@ from flask_login import UserMixin
 # leads to the creation of a table with the
 # same name (except lowercased)
 
+#This is a function required for login.
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
+# UserMixin adds a lot of methods to your class,
+# needed for log-in
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20) , unique = True, nullable=False)
@@ -25,9 +27,9 @@ class User(db.Model, UserMixin):
     # through the name 'author'. Read up on Lazy.
     # Posts does NOT get assigned a column in the Database.
     # You can use user.author to access posts of this user.
-    posts = db.relationship('Post', backref=('author', lazy=True))
+    posts = db.relationship('Post', backref=('author'), lazy=True)
 
-    #Example of a magic function, read up.
+    # Example of a magic function, read up.
     # Function responsible for printing when
     # we use CLI to access Database.
     def __repr__(self):
