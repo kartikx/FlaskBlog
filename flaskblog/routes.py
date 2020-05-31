@@ -72,7 +72,13 @@ def login():
             # search bar query.
 
             next_page = request.args.get("next")
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+
+            # If a next_page exists, you should check if it's safe.
+            # Otherwise, someone can add in custom query, and force
+            # a redirect to malicious websites.
+            if not is_safe_url(next_page):
+                return flask.abort(400)
+            return redirect(next_page or url_for("home"))
 
         else :
           flash("Login Failed, please check your username and password", "danger")
