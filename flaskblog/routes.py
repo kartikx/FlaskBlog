@@ -3,6 +3,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog.forms import RegistrationForm, LoginForm
 from flaskblog.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
+from is_safe_url import is_safe_url
 
 posts = [
     {
@@ -77,12 +78,12 @@ def login():
             # If a next_page exists, you should check if it's safe.
             # Otherwise, someone can add in custom query, and force
             # a redirect to malicious websites.
-            if not is_safe_url(next_page):
+            if not is_safe_url(next_page, "localhost:5000"):
                 return flask.abort(400)
             return redirect(next_page or url_for("home"))
 
-        else :
-          flash("Login Failed, please check your username and password", "danger")
+        else:
+            flash("Login Failed, please check your username and password", "danger")
 
     return render_template('login.html', title = 'Login', form=form)
 
