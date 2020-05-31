@@ -21,8 +21,8 @@ posts = [
 
 db.create_all()
 
-@app.route('/')  # / is the root page
-@app.route('/home')  # it's easy to stack up routes similar to switch cases
+@app.route('/')
+@app.route('/home')
 def home():
     return render_template('home.html', posts=posts)
 
@@ -87,5 +87,4 @@ def logout():
 @app.route("/account")
 @login_required # to be able to use this, you need to add a login_view to login_manager.
 def account():
-    # modify title to be current user name.
     return render_template("account.html", title=current_user.username)
