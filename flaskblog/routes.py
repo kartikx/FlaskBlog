@@ -1,6 +1,6 @@
 from flaskblog import app, db, bcrypt
-from flask import render_template, url_for, flash, redirect, request
-from flaskblog.forms import RegistrationForm, LoginForm
+from flask import render_template, url_for, flash, redirect, request, abort
+from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from flaskblog.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from is_safe_url import is_safe_url
@@ -78,8 +78,8 @@ def login():
             # If a next_page exists, you should check if it's safe.
             # Otherwise, someone can add in custom query, and force
             # a redirect to malicious websites.
-            if not is_safe_url(next_page, "localhost:5000"):
-                return flask.abort(400)
+            if next_page and not is_safe_url(next_page, "localhost:5000"):
+                return abort(400)
             return redirect(next_page or url_for("home"))
 
         else:
@@ -92,7 +92,24 @@ def logout():
     logout_user()
     return redirect(url_for("home"))
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
 @login_required # to be able to use this, you need to add a login_view to login_manager.
 def account():
-    return render_template("account.html", title=current_user.username)
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash("Your details have been updated", "success")
+        return redirect(url_for('account'))
+    elif request.method == "GET":
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    '''
+    It is a good idea, to do as much computation in your py
+    files, and then send to your html as a parameter,
+    instead of crowding your html with if blocks
+    '''
+    image_src = url_for('static', filename='profilephoto' + current_user.image_file)
+    return render_template("account.html", title=current_user.username,
+                            image_src=image_src, form=form)
