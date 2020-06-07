@@ -119,6 +119,11 @@ def save_picture(form_picture):
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
+        # Since profile picture isn't necessary, add a check here to see if
+        # anything was put in
+        if form.picture.data :
+            picture_fn = save_picture(form.picture.data)
+            current_user.image_file = picture_fn
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
