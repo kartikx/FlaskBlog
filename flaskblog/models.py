@@ -24,9 +24,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
 
     # The backref allows the Post class to access the corresponding User
-    # through the name 'author'. Read up on Lazy.
+    # through the name 'author'.
     # Posts does NOT get assigned a column in the Database.
-    # You can use user.author to access posts of this user.
     posts = db.relationship('Post', backref=('author'), lazy=True)
 
     # Example of a magic function, read up.
