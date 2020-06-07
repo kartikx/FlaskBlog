@@ -15,11 +15,11 @@ using bootstrap documentation. -->
         {{form.username.label(class="form-control-label")}}
         {% if form.username.errors %}
           {{form.username(class="form-control form-control-sm is-invalid")}}
-        {% for error in form.username.errors %}
-          <div class="invalid-feedback">
-              <span> {{error}} </span>
-          </div>
-        {% endfor %}
+          {% for error in form.username.errors %}
+            <div class="invalid-feedback">
+                <span> {{error}} </span>
+            </div>
+          {% endfor %}
         {% else %}
           {{form.username(class="form-control form-control-sm")}}
         {% endif %}
