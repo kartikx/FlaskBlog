@@ -144,6 +144,6 @@ def account():
     instead of crowding your html with if blocks.
     You can send as many as you want after all.
     '''
-    image_src = url_for('static', filename='profilephoto' + current_user.image_file)
+    image_src = url_for('static', filename='profilepics/' + current_user.image_file)
     return render_template("account.html", title=current_user.username,
                             image_src=image_src, form=form)
