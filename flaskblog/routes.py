@@ -135,3 +135,24 @@ def account():
     image_src = url_for('static', filename='profilepics/' + current_user.image_file)
     return render_template("account.html", title=current_user.username,
                             image_src=image_src, form=form)
+
+@app.route("/post/new", methods=["GET", "POST"])
+@login_required
+def create_post():
+    form = CreatePostForm()
+    if form.validate_on_submit():
+        # ! If you don't add post.user_id it fails the NOT NULL integrity constant.
+        # ? We can set this using the author backref.
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash("Post created succesfully!", "success")
+        return redirect(url_for("home"))
+    return render_template("create_post.html", title="New Post", form=form)
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    # This will return the Post if a post with that postId exists
+    # Else it will redirect to a 404 page.
+    post = Post.query.get_or_404(post_id);
+    return render_template("post.html", title=post.title, post=post)
