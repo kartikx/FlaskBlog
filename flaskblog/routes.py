@@ -102,13 +102,20 @@ def account():
         db.session.commit()
         flash("Your details have been updated", "success")
         return redirect(url_for('account'))
+    
+    # this will be reached, if the user directly reached this page
+    # as opposed to having reached it back by filling the form on it
+    # that would have been a POST request.
+    # We keep the user's current details prefilled.
     elif request.method == "GET":
         form.username.data = current_user.username
         form.email.data = current_user.email
+
     '''
     It is a good idea, to do as much computation in your py
     files, and then send to your html as a parameter,
-    instead of crowding your html with if blocks
+    instead of crowding your html with if blocks.
+    You can send as many as you want after all.
     '''
     image_src = url_for('static', filename='profilephoto' + current_user.image_file)
     return render_template("account.html", title=current_user.username,
