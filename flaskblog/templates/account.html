@@ -39,6 +39,17 @@
                 {% endif %}
             </fieldset>
             <fieldset class="form-group">
+                {{form.picture.label(class="form-control-label")}}
+                {{form.picture(class="form-control-file")}}
+                {% if form.picture.errors %}
+                    {% for error in form.picture.errors %}
+                        <span class="text-danger">
+                            {{error}}
+                        </span>
+                    {% endfor %}
+                {% endif %}
+            </fieldset>
+            <fieldset class="form-group">
                 {{form.submit(class="btn btn-info")}}
             </fieldset>
         </form>
