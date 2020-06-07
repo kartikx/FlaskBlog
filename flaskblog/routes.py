@@ -1,9 +1,12 @@
+import os
+import secrets
 from flaskblog import app, db, bcrypt
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from flaskblog.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from is_safe_url import is_safe_url
+from PIL import Image
 
 posts = [
     {
