@@ -8,21 +8,6 @@ from flask_login import login_user, logout_user, current_user, login_required
 from is_safe_url import is_safe_url
 from PIL import Image
 
-posts = [
-    {
-        'author': 'Kartik Ramesh',
-        'title': 'First Post',
-        'content': 'This is my first post, welcome to my blog!',
-        'date_posted': 'May 27, 2020'
-    },
-    {
-        'author': 'Kartik Ramesh',
-        'title': 'Second Post',
-        'content': 'This is my second post!',
-        'date_posted': 'May 29, 2020'
-    }
-]
-
 db.create_all()
 
 @app.route('/')
