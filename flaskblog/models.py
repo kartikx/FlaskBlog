@@ -34,6 +34,29 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}','{self.email})"
 
+    # ? There are no security issues here, even if multiple 
+    # ? Users try to simult. try reset passwords, because
+    # ? of the simple reason that this is a method (segregation of OOP)
+    # ? Each user will be given different tokens.
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config["SECRET_KEY"], expires_sec)
+        return s.dumps({"user_id": self.id}).decode('utf-8')
+    
+    # * This method returns a user if valid token, or None if invalid.
+    # ? You need to explicitly define as static, if not using the self variable.
+    @staticmethod 
+    def verify_reset_token(token):
+        # No need to pass in expiration timer here. This just verifies.
+        s = Serializer(app.config["SECRET_KEY"])
+        try:
+            # ? The token that this method is passed, will only have a single user_id
+            # ? associated with it. Multiple tokens may exist however if multiple users
+            # ? try to reset passwords.
+            user_id = s.loads(token)["user_id"]
+        except:
+            return None
+        return User.query.get(user_id) 
+        
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
