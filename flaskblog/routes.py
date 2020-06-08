@@ -10,10 +10,23 @@ from PIL import Image
 
 db.create_all()
 
+
+# ? Since the page variable is not compulsory, we aren't defining a 
+# ? variable in the route as in update_post, delete_post.
+# ? Instead we're taking in from the query. In home.html, the links
+# ? at the bottom of the page are setup so that they pass in a page
+# ? parameter to the url_for method. This results in the proper search query.
+
 @app.route('/')
 @app.route('/home')
 def home():
-    posts = Post.query.all()
+    # We're getting the page from the URL query, where the default is 1.
+    # Setting the type will throw an error,
+    # if someone passes a value other than an integer as a page num.
+    page  = request.args.get("page", 1, type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page = page, per_page=3)
+
+    # So our home.html is always passed in a single page, corresponding to the search query number.
     return render_template('home.html', posts=posts)
 
 
