@@ -1,13 +1,14 @@
 import os
 import secrets
-from flaskblog import app, db, bcrypt
+from flaskblog import app, db, bcrypt, mail
 from flask import render_template, url_for, flash, redirect, request, abort
-from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreatePostForm, UpdatePostForm
+from flaskblog.forms import (RegistrationForm, LoginForm, UpdateAccountForm, CreatePostForm,
+                             UpdatePostForm, RequestResetForm, ResetPasswordForm)
 from flaskblog.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from is_safe_url import is_safe_url
 from PIL import Image
-
+from flask_mail import Message
 db.create_all()
 
 
@@ -219,7 +220,6 @@ def user_posts(username):
     return render_template("user_posts.html", posts=posts, user=user)
 
 # ? This route is the page where user request a password reset.
-# why do we need post?
 @app.route("/reset_password", methods=["GET", "POST"])
 def reset_request():
     # User should be logged out in order to request password reset
