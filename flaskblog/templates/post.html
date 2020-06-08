@@ -8,11 +8,11 @@
    src="{{url_for('static', filename='profilepics/'+ post.author.image_file)}}">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="{{url_for('user_posts',username=post.author.username)}}"> {{ post.author.username }}</a>
+      <a class="mr-2" href="{{url_for('user.user_posts',username=post.author.username)}}"> {{ post.author.username }}</a>
       <small class="text-muted">{{post.date_posted.strftime("%-d %B, %Y")}}</small>
     </div>
     {% if post.author == current_user %}
-      <a class="btn btn-secondary btn-sm mb-2 float-right" href="{{url_for("update_post", post_id = post.id)}}">Update</a>
+      <a class="btn btn-secondary btn-sm mb-2 float-right" href="{{url_for("posts.update_post", post_id = post.id)}}">Update</a>
       <button type="button" class="btn btn-danger btn-sm mx-2 mb-2 float-right" data-toggle="modal" data-target="#deleteModal">
         Delete Post
       </button>
@@ -41,7 +41,7 @@
         <button type="button" class="btn btn-success float-left" data-dismiss="modal">Cancel</button>
 
         <!-- ? We're modifying this to a form, so that it can send a POST Request -->
-        <form action="{{url_for('delete_post', post_id=post.id)}}" method="POST">
+        <form action="{{url_for('posts.delete_post', post_id=post.id)}}" method="POST">
           <input class="btn btn-danger mt-3" type="submit" value="Delete">
         </form>
       </div>

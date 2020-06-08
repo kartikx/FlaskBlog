@@ -1,25 +1,18 @@
-# I think this is the file, first called when we do
-# from flaskblog import .. Read up more on packaging.
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-app = Flask(__name__)
+from flaskblog.config import Config
 
-# A secret key protects your website from attacks. Read more in future.
-app.config['SECRET_KEY']              = 'b4fc4568f2af568f30f20d92385ced86'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['MAIL_SERVER']             = 'smtp.googlemail.com'
-app.config['MAIL_PORT']               = 587
-app.config['MAIL_USE_TLS']            = True
-app.config['MAIL_USERNAME']           = 'riteshkartik@gmail.com'
-app.config['MAIL_PASSWORD']           = 'envvariable'
 
-db            = SQLAlchemy(app)
-bcrypt        = Bcrypt(app)
-login_manager = LoginManager(app)
-mail          = Mail(app)
+# We don't initialize db with app, this enables
+# the usage of same db variables with multiple 
+# app configs.
+db            = SQLAlchemy()
+bcrypt        = Bcrypt()
+login_manager = LoginManager()
+mail          = Mail()
 
 # this is going to be the same as the function name,
 # i.e. the thing you'd pass in to url_for,
@@ -28,11 +21,26 @@ mail          = Mail(app)
 
 # You need to specify this, so that login restricted sites
 # know what page to show.
-login_manager.login_view = 'login'
+login_manager.login_view = 'user.login'
 
 # Specifying this enables a bootstrap-style message.
 login_manager.login_message_category = 'info'
 
-# At the end to prevent Circular Imports
-from flaskblog import routes
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    # We have delegated config information to a separate class
 
+    app.config.from_object(config_class)
+    db.init_app(app)            
+    bcrypt.init_app(app)   
+    login_manager.init_app(app) 
+    mail.init_app(app)
+
+    from flaskblog.user.routes import user
+    from flaskblog.posts.routes import posts
+    from flaskblog.main.routes import main
+    app.register_blueprint(user)
+    app.register_blueprint(posts)
+    app.register_blueprint(main)
+
+    return app

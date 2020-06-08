@@ -1,6 +1,7 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flaskblog import db, login_manager, app
+from flask import current_app
+from flaskblog import db, login_manager
 from flask_login import UserMixin
 
 # The Post model and the User Model have a
@@ -40,7 +41,7 @@ class User(db.Model, UserMixin):
     # ? of the simple reason that this is a method (segregation of OOP)
     # ? Each user will be given different tokens.
     def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config["SECRET_KEY"], expires_sec)
+        s = Serializer(current_app.config["SECRET_KEY"], expires_sec)
         return s.dumps({"user_id": self.id}).decode('utf-8')
     
     # * This method returns a user if valid token, or None if invalid.
@@ -48,7 +49,7 @@ class User(db.Model, UserMixin):
     @staticmethod 
     def verify_reset_token(token):
         # No need to pass in expiration timer here. This just verifies.
-        s = Serializer(app.config["SECRET_KEY"])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             # ? The token that this method is passed, will only have a single user_id
             # ? associated with it. Multiple tokens may exist however if multiple users
