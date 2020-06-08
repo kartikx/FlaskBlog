@@ -4,16 +4,22 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
-
+from flask_mail import Mail
 app = Flask(__name__)
 
 # A secret key protects your website from attacks. Read more in future.
 app.config['SECRET_KEY']              = 'b4fc4568f2af568f30f20d92385ced86'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['MAIL_SERVER']             = 'smtp.googlemail.com'
+app.config['MAIL_PORT']               = 587
+app.config['MAIL_USE_TLS']            = True
+app.config['MAIL_USERNAME']           = 'riteshkartik@gmail.com'
+app.config['MAIL_PASSWORD']           = 'envvariable'
 
 db            = SQLAlchemy(app)
 bcrypt        = Bcrypt(app)
 login_manager = LoginManager(app)
+mail          = Mail(app)
 
 # this is going to be the same as the function name,
 # i.e. the thing you'd pass in to url_for,
