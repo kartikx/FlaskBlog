@@ -219,6 +219,18 @@ def user_posts(username):
             .paginate(per_page=3, page=page)
     return render_template("user_posts.html", posts=posts, user=user)
 
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request', sender='noreply@demo.com',
+                  recipients=[user.email])
+    msg.body = f''' To reset your password, visit the following link:
+{url_for("reset_password", token=token, _external=True)}
+
+If you did not make this request, simply ignore this email.
+'''
+    mail.send(msg)
+
+
 # ? This route is the page where user request a password reset.
 @app.route("/reset_password", methods=["GET", "POST"])
 def reset_request():
