@@ -245,3 +245,25 @@ def reset_request():
         flash("An email has been sent to you with instruction on how to reset your password", "info")
         return redirect(url_for("login"))
     return render_template("request_reset.html", title = "Reset Password", form=form)
+
+# The user gets this link through the email we sent him.
+# We'll use this to now verify it.
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+
+    # Verifying whether the token is correct.
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash("That token is either invalid or expired", "warning")
+        return redirect(url_for("reset_request"))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+        user.password = hashed_password
+        db.session.commit()
+        flash("Your password has been changed", "success")
+        return redirect(url_for("login"))
+    return render_template("reset_password.html", title="Reset Password", form=form)
