@@ -208,4 +208,12 @@ def delete_post(post_id):
     flash("Your post has been successfully deleted!", "success")
     return redirect(url_for("home"))
 
-
+# ? Route for posts by a particular user
+@app.route("/home/<string:username>")
+def user_posts(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get("page", 1, type=int)
+    posts = Post.query.filter_by(author=user)\
+            .order_by(Post.date_posted.desc())\
+            .paginate(per_page=3, page=page)
+    return render_template("user_posts.html", posts=posts, user=user)
