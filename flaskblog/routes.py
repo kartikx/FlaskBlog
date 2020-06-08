@@ -217,3 +217,15 @@ def user_posts(username):
             .order_by(Post.date_posted.desc())\
             .paginate(per_page=3, page=page)
     return render_template("user_posts.html", posts=posts, user=user)
+
+# ? This route is the page where user request a password reset.
+# why do we need post?
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_request():
+    # User should be logged out in order to request password reset
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    form = RequestResetForm()
+    if form.validate_on_submit:
+        pass
+    return render_template("request_reset.html", title = "Reset Password", form=form)
