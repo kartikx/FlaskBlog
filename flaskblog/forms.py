@@ -60,3 +60,19 @@ class UpdatePostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     content = TextAreaField("Content", validators=[DataRequired()])
     submit = SubmitField("Update")
+
+class RequestResetForm(FlaskForm):
+    email = StringField("Email", validators=[Email()])
+    submit = SubmitField("Request Password Reset")
+
+    # Note that the validator is passed in the email Field not the email data.
+    # ? Need to read up on custom validators and how they work.
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError(message="That email is not registered.")
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField("New Password", validators=[DataRequired()])
+    confirm_password = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
+    submit = SubmitField("Reset Password")
